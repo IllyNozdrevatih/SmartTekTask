@@ -73,10 +73,12 @@ scene.add(plane)
  * Points
  */
 const geometry = new THREE.CircleGeometry( 1, 16 );
-const material = new THREE.MeshBasicMaterial( { color: 0x000 } );
-const sphere1 = new THREE.Mesh( geometry, material );
-const sphere2 = new THREE.Mesh( geometry, material );
-const sphere3 = new THREE.Mesh( geometry, material );
+const material1 = new THREE.MeshBasicMaterial( { color: 0x000 } );
+const material2 = new THREE.MeshBasicMaterial( { color: 0x000 } );
+const material3 = new THREE.MeshBasicMaterial( { color: 0x000 } );
+const sphere1 = new THREE.Mesh( geometry, material1 );
+const sphere2 = new THREE.Mesh( geometry, material2 );
+const sphere3 = new THREE.Mesh( geometry, material3 );
 //scale
 sphere1.scale.x = 0.01
 sphere1.scale.y = 0.01
@@ -100,10 +102,14 @@ sphere2.position.z = 0.108
 sphere3.position.x = 0.065
 sphere3.position.y = 0.11
 
+sphere1.name = 'sphere1'
+sphere2.name = 'sphere2'
+sphere3.name = 'sphere3'
 
 scene.add( sphere1 );
 scene.add( sphere2 );
 scene.add( sphere3 );
+
 /**
  * Light
  */
@@ -178,26 +184,20 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
 
-// intersects
-let INTERSECTED
-
 function intersectsFunction () {
     const intersects = raycaster.intersectObjects( scene.children, false );
 
     if ( intersects.length > 0 ) {
 
-        if ( INTERSECTED != intersects[ 0 ].object ) {
+        const arrNames = ['sphere1', 'sphere2', 'sphere3']
+        if (arrNames.includes(intersects[ 0 ].object.name)) {
 
-            if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-
-            INTERSECTED = intersects[ 0 ].object;
-            INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
-            INTERSECTED.material.emissive.setHex( 0xff0000 );
+            if (intersects[ 0 ].object.material.color.b === 1) {
+                intersects[ 0 ].object.material.color.set('#ff0000')
+            } else {
+                intersects[ 0 ].object.material.color.set('#0000ff')
+            }
         }
-    } else {
-        if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
-
-        INTERSECTED = null;
     }
 }
 
@@ -207,7 +207,6 @@ const tick = () =>
     // update the picking ray with the camera and mouse position
     raycaster.setFromCamera( mouse, camera );
 
-    // intersectsFunction()
     // Update controls
     controls.update()
     // console.log('controls.target', controls)
@@ -233,3 +232,5 @@ function onMouseMove( event ) {
 
 window.addEventListener( 'mousemove', onMouseMove, false );
 
+
+window.addEventListener('click', intersectsFunction)
