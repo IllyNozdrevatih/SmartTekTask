@@ -40,7 +40,6 @@ const addScullModel = ( function (x = 0,y , z = 0){
         model.scene.position.y = y
         model.scene.position.z = z
 
-
         model.scene.traverse( function( node ) {
             if ( node.isMesh || node.isLight ) node.castShadow = true;
             if ( node.isMesh || node.isLight ) node.receiveShadow = false;
@@ -52,8 +51,13 @@ const addScullModel = ( function (x = 0,y , z = 0){
     } )
 } );
 addScullModel(0, 0.13)
+
 /**
- * Objects
+ * MeshStandardMaterial
+ */
+
+/**
+ * Plane
  */
 const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff })
 
@@ -65,7 +69,41 @@ plane.rotation.x = Math.PI * 0.5 * -1;
 
 scene.add(plane)
 
+/**
+ * Points
+ */
+const geometry = new THREE.CircleGeometry( 1, 16 );
+const material = new THREE.MeshBasicMaterial( { color: 0x000 } );
+const sphere1 = new THREE.Mesh( geometry, material );
+const sphere2 = new THREE.Mesh( geometry, material );
+const sphere3 = new THREE.Mesh( geometry, material );
+//scale
+sphere1.scale.x = 0.01
+sphere1.scale.y = 0.01
+sphere1.scale.z = 0.01
 
+sphere2.scale.x = 0.01
+sphere2.scale.y = 0.01
+sphere2.scale.z = 0.01
+
+sphere3.scale.x = 0.01
+sphere3.scale.y = 0.01
+sphere3.scale.z = 0.01
+
+sphere1.position.x = 0.082
+sphere1.position.y = 0.2
+sphere1.position.z = 0.02
+
+sphere2.position.y = 0.147
+sphere2.position.z = 0.108
+
+sphere3.position.x = 0.065
+sphere3.position.y = 0.11
+
+
+scene.add( sphere1 );
+scene.add( sphere2 );
+scene.add( sphere3 );
 /**
  * Light
  */
@@ -120,6 +158,7 @@ controls.enableDamping = true
 controls.maxPolarAngle = Math.PI/2;
 controls.minDistance = 0.2;
 controls.maxDistance = 0.7;
+
 /**
  * Renderer
  */
@@ -135,15 +174,47 @@ renderer.outputEncoding = THREE.sRGBEncoding;
 /**
  * Animate
  */
-const clock = new THREE.Clock()
+
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+// intersects
+let INTERSECTED
+
+function intersectsFunction () {
+    const intersects = raycaster.intersectObjects( scene.children, false );
+
+    if ( intersects.length > 0 ) {
+
+        if ( INTERSECTED != intersects[ 0 ].object ) {
+
+            if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+            INTERSECTED = intersects[ 0 ].object;
+            INTERSECTED.currentHex = INTERSECTED.material.emissive.getHex();
+            INTERSECTED.material.emissive.setHex( 0xff0000 );
+        }
+    } else {
+        if ( INTERSECTED ) INTERSECTED.material.emissive.setHex( INTERSECTED.currentHex );
+
+        INTERSECTED = null;
+    }
+}
+
 
 const tick = () =>
 {
-    const elapsedTime = clock.getElapsedTime()
+    // update the picking ray with the camera and mouse position
+    raycaster.setFromCamera( mouse, camera );
 
+    // intersectsFunction()
     // Update controls
     controls.update()
+    // console.log('controls.target', controls)
 
+    sphere1.lookAt(camera.position)
+    sphere2.lookAt(camera.position)
+    sphere3.lookAt(camera.position)
     // Render
     renderer.render(scene, camera)
 
@@ -152,3 +223,13 @@ const tick = () =>
 }
 
 tick()
+
+
+function onMouseMove( event ) {
+
+    mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+}
+
+window.addEventListener( 'mousemove', onMouseMove, false );
+
