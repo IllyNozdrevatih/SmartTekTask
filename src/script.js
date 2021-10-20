@@ -3,12 +3,6 @@ import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
-import * as dat from 'dat.gui'
-
-/**
- * Debug
- */
-const gui = new dat.GUI()
 
 /**
  * Canvas
@@ -97,10 +91,6 @@ const directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
 directionalLight.castShadow = true; // default false
 directionalLight.shadow.mapSize.width = 512 * 3
 directionalLight.shadow.mapSize.height = 512 * 3
-
-gui.add(directionalLight.position,'x').min(-5).max(5).step(0.05).name('directional x')
-gui.add(directionalLight.position,'y').min(0).max(5).step(0.05).name('directional y')
-gui.add(directionalLight.position,'z').min(-5).max(5).step(0.05).name('directional z')
 
 scene.add(directionalLight);
 /**
