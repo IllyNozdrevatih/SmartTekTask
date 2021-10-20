@@ -4,6 +4,8 @@
 Download [Node.js](https://nodejs.org/en/download/).
 Run this followed commands:
 
+Live demo 
+https://epic-tesla-00c5ea.netlify.app/
 ``` bash
 # Install dependencies (only the first time)
 npm install
