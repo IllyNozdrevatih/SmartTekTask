@@ -74,9 +74,9 @@ scene.add(plane)
  * Points
  */
 const geometry = new THREE.CircleGeometry( 1, 16 );
-const material1 = new THREE.MeshBasicMaterial( { color: 0x000 } );
-const material2 = new THREE.MeshBasicMaterial( { color: 0x000 } );
-const material3 = new THREE.MeshBasicMaterial( { color: 0x000 } );
+const material1 = new THREE.MeshBasicMaterial( { color: 0x2fa8fe } );
+const material2 = new THREE.MeshBasicMaterial( { color: 0x2fa8fe } );
+const material3 = new THREE.MeshBasicMaterial( { color: 0x2fa8fe } );
 const sphere1 = new THREE.Mesh( geometry, material1 );
 const sphere2 = new THREE.Mesh( geometry, material2 );
 const sphere3 = new THREE.Mesh( geometry, material3 );
