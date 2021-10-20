@@ -216,11 +216,13 @@ function intersectsFunction () {
             sphereLabelItem.style.height = '0'
             sphereLabelItem.style.width = '0'
             sphereLabelItem.style.top = '15px';
+            sphereLabelItem.classList.add('cursor-pointer');
         } else {
             sphereLabelItem.style.opacity = 1
             sphereLabelItem.style.height = 'auto'
             sphereLabelItem.style.width = 'auto'
             sphereLabelItem.style.top = '-10px';
+            sphereLabelItem.classList.remove('cursor-pointer');
         }
     }
 }
