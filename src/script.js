@@ -132,6 +132,7 @@ sphereLabelDiv1.className = 'label';
 sphereLabelDiv1.textContent = `Label 1. ${loremText}`;
 sphereLabelDiv1.style.opacity = 0
 
+console.log('sphereLabelDiv1.style', sphereLabelDiv1.style)
 const sphereLabelDiv2 = document.createElement( 'div' );
 sphereLabelDiv2.className = 'label';
 sphereLabelDiv2.textContent = `Label 2. ${loremText}`;
@@ -154,6 +155,12 @@ sphere1.add( sphereLabel1 );
 sphere2.add( sphereLabel2 );
 sphere3.add( sphereLabel3 );
 
+sphereLabelDiv1.style.height = '0'
+sphereLabelDiv1.style.width = '0'
+sphereLabelDiv2.style.height = '0'
+sphereLabelDiv2.style.width = '0'
+sphereLabelDiv3.style.height = '0'
+sphereLabelDiv3.style.width = '0'
 /**
  * Camera
  */
@@ -206,8 +213,12 @@ function intersectsFunction () {
 
         if ( sphereLabelItem.style.opacity === '1' ) {
             sphereLabelItem.style.opacity = 0
+            sphereLabelItem.style.height = '0'
+            sphereLabelItem.style.width = '0'
         } else {
             sphereLabelItem.style.opacity = 1
+            sphereLabelItem.style.height = 'auto'
+            sphereLabelItem.style.width = 'auto'
         }
     }
 }
