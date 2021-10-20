@@ -16,4 +16,11 @@ body
     top: 0;
     left: 0;
     outline: none;
+    z-index: 1;
+}
+
+.label {
+    background-color: black;
+    padding: 5px;
+    color: white;
 }

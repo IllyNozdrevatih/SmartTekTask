@@ -2,6 +2,7 @@ import './style.css'
 import * as THREE from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import * as dat from 'dat.gui'
 
 class BaseModel {
@@ -150,6 +151,42 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
+
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize( window.innerWidth, window.innerHeight );
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0px';
+document.body.appendChild( labelRenderer.domElement );
+
+const loremText  = 'Lorem ipsum dolor sit amet'
+
+const sphereLabelDiv1 = document.createElement( 'div' );
+sphereLabelDiv1.className = 'label';
+sphereLabelDiv1.textContent = `Label 1. ${loremText}`;
+sphereLabelDiv1.style.opacity = 0
+
+const sphereLabelDiv2 = document.createElement( 'div' );
+sphereLabelDiv2.className = 'label';
+sphereLabelDiv2.textContent = `Label 2. ${loremText}`;
+sphereLabelDiv2.style.opacity = 0
+
+const sphereLabelDiv3 = document.createElement( 'div' );
+sphereLabelDiv3.className = 'label';
+sphereLabelDiv3.textContent = `Label 3.${loremText}`;
+sphereLabelDiv3.style.opacity = 0
+
+const sphereLabel1 = new CSS2DObject( sphereLabelDiv1 );
+const sphereLabel2 = new CSS2DObject( sphereLabelDiv2 )
+const sphereLabel3 = new CSS2DObject( sphereLabelDiv3 )
+
+sphereLabel1.position.set( 0, 1, 0 );
+sphereLabel2.position.set( 0, 1, 0 );
+sphereLabel3.position.set( 0, 1, 0 );
+
+sphere1.add( sphereLabel1 );
+sphere2.add( sphereLabel2 );
+sphere3.add( sphereLabel3 );
+
 /**
  * Camera
  */
@@ -188,14 +225,29 @@ function intersectsFunction () {
     const intersects = raycaster.intersectObjects( scene.children, false );
 
     if ( intersects.length > 0 ) {
-
-        const arrNames = ['sphere1', 'sphere2', 'sphere3']
-        if (arrNames.includes(intersects[ 0 ].object.name)) {
-
-            if (intersects[ 0 ].object.material.color.b === 1) {
-                intersects[ 0 ].object.material.color.set('#ff0000')
+        // case sphere1
+        if (intersects[ 0 ].object.name === 'sphere1') {
+            // sphereLabelDiv1.style.opacity = 0;
+            if ( sphereLabelDiv1.style.opacity === '1' ) {
+                sphereLabelDiv1.style.opacity = 0
             } else {
-                intersects[ 0 ].object.material.color.set('#0000ff')
+                sphereLabelDiv1.style.opacity = 1
+            }
+        }
+        // case sphere2
+        if (intersects[ 0 ].object.name === 'sphere2') {
+            if ( sphereLabelDiv2.style.opacity === '1' ) {
+                sphereLabelDiv2.style.opacity = 0
+            } else {
+                sphereLabelDiv2.style.opacity = 1
+            }
+        }
+        // case sphere3
+        if (intersects[ 0 ].object.name === 'sphere3') {
+            if ( sphereLabelDiv3.style.opacity === '1' ) {
+                sphereLabelDiv3.style.opacity = 0
+            } else {
+                sphereLabelDiv3.style.opacity = 1
             }
         }
     }
@@ -214,6 +266,8 @@ const tick = () =>
     sphere1.lookAt(camera.position)
     sphere2.lookAt(camera.position)
     sphere3.lookAt(camera.position)
+
+    labelRenderer.render( scene, camera );
     // Render
     renderer.render(scene, camera)
 
