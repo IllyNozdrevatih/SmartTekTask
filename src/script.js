@@ -246,3 +246,4 @@ function onMouseMove( event ) {
 window.addEventListener( 'mousemove', onMouseMove, false );
 
 window.addEventListener('click', intersectsFunction)
+window.addEventListener('touchend', intersectsFunction);
