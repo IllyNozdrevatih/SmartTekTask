@@ -24,3 +24,7 @@ body
     padding: 5px;
     color: white;
 }
+
+.dg.ac {
+    z-index: 1 !important;
+}

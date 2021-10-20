@@ -5,24 +5,16 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 import * as dat from 'dat.gui'
 
-class BaseModel {
-    constructor( name ) {
-        this.name = name
-        this.scene = null
-    }
-}
-// global variables
-const skullModel = new BaseModel('OSG_Scene');
 /**
- * Base
+ * Debug
  */
-// Debug
 const gui = new dat.GUI()
 
-// Canvas
+/**
+ * Canvas
+ */
 const canvas = document.querySelector('canvas.webgl')
 
-// Scene
 const scene = new THREE.Scene()
 scene.background = '#fff'
 
@@ -54,10 +46,6 @@ const addScullModel = ( function (x = 0,y , z = 0){
 addScullModel(0, 0.13)
 
 /**
- * MeshStandardMaterial
- */
-
-/**
  * Plane
  */
 const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff })
@@ -74,35 +62,22 @@ scene.add(plane)
  * Points
  */
 const geometry = new THREE.CircleGeometry( 1, 16 );
-const material1 = new THREE.MeshBasicMaterial( { color: 0x2fa8fe } );
-const material2 = new THREE.MeshBasicMaterial( { color: 0x2fa8fe } );
-const material3 = new THREE.MeshBasicMaterial( { color: 0x2fa8fe } );
-const sphere1 = new THREE.Mesh( geometry, material1 );
-const sphere2 = new THREE.Mesh( geometry, material2 );
-const sphere3 = new THREE.Mesh( geometry, material3 );
-//scale
-sphere1.scale.x = 0.01
-sphere1.scale.y = 0.01
-sphere1.scale.z = 0.01
 
-sphere2.scale.x = 0.01
-sphere2.scale.y = 0.01
-sphere2.scale.z = 0.01
+const sphereMaterial = new THREE.MeshBasicMaterial( { color: 0x2fa8fe } );
 
-sphere3.scale.x = 0.01
-sphere3.scale.y = 0.01
-sphere3.scale.z = 0.01
+const sphere1 = new THREE.Mesh( geometry, sphereMaterial );
+const sphere2 = new THREE.Mesh( geometry, sphereMaterial );
+const sphere3 = new THREE.Mesh( geometry, sphereMaterial );
 
-sphere1.position.x = 0.082
-sphere1.position.y = 0.2
-sphere1.position.z = 0.02
-
-sphere2.position.y = 0.147
-sphere2.position.z = 0.108
-
-sphere3.position.x = 0.065
-sphere3.position.y = 0.11
-
+// sphere scale
+sphere1.scale.set(0.01, 0.01, 0.01)
+sphere2.scale.set(0.01, 0.01, 0.01)
+sphere3.scale.set(0.01, 0.01, 0.01)
+// sphere position
+sphere1.position.set(0.082, 0.2, 0.02)
+sphere2.position.set(0, 0.147, 0.108)
+sphere3.position.set(0.065, 0.11, 0)
+// sphere name
 sphere1.name = 'sphere1'
 sphere2.name = 'sphere2'
 sphere3.name = 'sphere3'
@@ -151,7 +126,9 @@ window.addEventListener('resize', () =>
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 })
 
-
+/**
+ * Labels
+ */
 const labelRenderer = new CSS2DRenderer();
 labelRenderer.setSize( window.innerWidth, window.innerHeight );
 labelRenderer.domElement.style.position = 'absolute';
@@ -176,8 +153,8 @@ sphereLabelDiv3.textContent = `Label 3.${loremText}`;
 sphereLabelDiv3.style.opacity = 0
 
 const sphereLabel1 = new CSS2DObject( sphereLabelDiv1 );
-const sphereLabel2 = new CSS2DObject( sphereLabelDiv2 )
-const sphereLabel3 = new CSS2DObject( sphereLabelDiv3 )
+const sphereLabel2 = new CSS2DObject( sphereLabelDiv2 );
+const sphereLabel3 = new CSS2DObject( sphereLabelDiv3 );
 
 sphereLabel1.position.set( 0, 1, 0 );
 sphereLabel2.position.set( 0, 1, 0 );
@@ -190,12 +167,13 @@ sphere3.add( sphereLabel3 );
 /**
  * Camera
  */
-// Base camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.set(0, 0.4, 0.4)
 scene.add(camera)
 
-// Controls
+/**
+ * Controls
+ */
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
 controls.maxPolarAngle = Math.PI/2;
@@ -215,45 +193,38 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 renderer.outputEncoding = THREE.sRGBEncoding;
 
 /**
- * Animate
+ * Raycaster
  */
-
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
+
+const sphereNameLabelsMap = new Map()
+sphereNameLabelsMap.set('sphere1', sphereLabelDiv1)
+sphereNameLabelsMap.set('sphere2', sphereLabelDiv2)
+sphereNameLabelsMap.set('sphere3', sphereLabelDiv3)
+
+const sphereNamesArray = [...sphereNameLabelsMap.keys()]
 
 function intersectsFunction () {
     const intersects = raycaster.intersectObjects( scene.children, false );
 
-    if ( intersects.length > 0 ) {
-        // case sphere1
-        if (intersects[ 0 ].object.name === 'sphere1') {
-            // sphereLabelDiv1.style.opacity = 0;
-            if ( sphereLabelDiv1.style.opacity === '1' ) {
-                sphereLabelDiv1.style.opacity = 0
-            } else {
-                sphereLabelDiv1.style.opacity = 1
-            }
-        }
-        // case sphere2
-        if (intersects[ 0 ].object.name === 'sphere2') {
-            if ( sphereLabelDiv2.style.opacity === '1' ) {
-                sphereLabelDiv2.style.opacity = 0
-            } else {
-                sphereLabelDiv2.style.opacity = 1
-            }
-        }
-        // case sphere3
-        if (intersects[ 0 ].object.name === 'sphere3') {
-            if ( sphereLabelDiv3.style.opacity === '1' ) {
-                sphereLabelDiv3.style.opacity = 0
-            } else {
-                sphereLabelDiv3.style.opacity = 1
-            }
+    if (intersects.length === 0) return ;
+    if (sphereNamesArray.includes(intersects[ 0 ].object.name) === false) return ;
+
+    if (sphereNamesArray.includes(intersects[ 0 ].object.name)){
+        const sphereLabelItem = sphereNameLabelsMap.get(intersects[ 0 ].object.name)
+
+        if ( sphereLabelItem.style.opacity === '1' ) {
+            sphereLabelItem.style.opacity = 0
+        } else {
+            sphereLabelItem.style.opacity = 1
         }
     }
 }
 
-
+/**
+ * Animate
+ */
 const tick = () =>
 {
     // update the picking ray with the camera and mouse position
@@ -261,7 +232,6 @@ const tick = () =>
 
     // Update controls
     controls.update()
-    // console.log('controls.target', controls)
 
     sphere1.lookAt(camera.position)
     sphere2.lookAt(camera.position)
@@ -279,12 +249,10 @@ tick()
 
 
 function onMouseMove( event ) {
-
     mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
     mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 }
 
 window.addEventListener( 'mousemove', onMouseMove, false );
-
 
 window.addEventListener('click', intersectsFunction)
