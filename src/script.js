@@ -122,7 +122,7 @@ window.addEventListener('resize', () =>
 const labelRenderer = new CSS2DRenderer();
 labelRenderer.setSize( window.innerWidth, window.innerHeight );
 labelRenderer.domElement.style.position = 'absolute';
-labelRenderer.domElement.style.top = '0px';
+labelRenderer.domElement.style.top = '10px';
 document.body.appendChild( labelRenderer.domElement );
 
 const loremText  = 'Lorem ipsum dolor sit amet'
@@ -215,10 +215,12 @@ function intersectsFunction () {
             sphereLabelItem.style.opacity = 0
             sphereLabelItem.style.height = '0'
             sphereLabelItem.style.width = '0'
+            sphereLabelItem.style.top = '15px';
         } else {
             sphereLabelItem.style.opacity = 1
             sphereLabelItem.style.height = 'auto'
             sphereLabelItem.style.width = 'auto'
+            sphereLabelItem.style.top = '-10px';
         }
     }
 }
